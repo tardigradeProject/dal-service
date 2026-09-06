@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}") {
+        exclude group: 'at.yawk.lz4', module: 'lz4-java'
+    }
+
+    implementation('io.quarkiverse.jdbc:quarkus-jdbc-clickhouse:3.0.3') {
+        exclude group: 'org.lz4'
+    }
+
+    implementation 'org.lz4:lz4-java:1.8.1'
+
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-rest'
+    implementation 'io.quarkus:quarkus-rest-jackson'
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
+
+    testImplementation 'io.quarkus:quarkus-junit'
+    testImplementation 'io.rest-assured:rest-assured'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'at.yawk.lz4:lz4-java:1.8.1'
+    }
+    exclude group: 'org.lz4', module: 'lz4-java'
+}
+
+
+group = 'org.tardi'
+version = '1.0.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+quarkus {
+}
